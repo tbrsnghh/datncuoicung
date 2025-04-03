@@ -1,0 +1,252 @@
+/* src/components/thiepcuoi/thiepcuoi.module.css */
+.homeContainer {
+    max-width: 1200px;
+    margin:  auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .header {
+    margin-top: 180px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .logo {
+    font-size: 24px;
+    color: #ff6b6b;
+    font-weight: bold;
+  }
+  
+  .nav a {
+    margin-left: 20px;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .nav a:hover {
+    color: #ff6b6b;
+  }
+  
+  .hero {
+    text-align: center;
+    padding: 50px 0;
+    background: #f9f9f9;
+    border-radius: 10px;
+    margin-bottom: 30px;
+  }
+  
+  .hero h2 {
+    font-size: 32px;
+    color: #ff6b6b;
+    margin-bottom: 10px;
+  }
+  
+  .hero p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .ctaButton {
+    padding: 12px 30px;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .ctaButton:hover {
+    background: #ff8787;
+  }
+  
+  .templatesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+  }
+  
+  .templateCard {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s;
+  }
+  
+  .templateCard:hover {
+    transform: scale(1.05);
+  }
+  
+  .templateImage {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .templateInfo {
+    padding: 15px;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .templateInfo h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #ff6b6b;
+  }
+  
+  .templateInfo p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+  }
+  
+  .viewButton {
+    padding: 8px 20px;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .viewButton:hover {
+    background: #ff8787;
+  }
+  
+  .weddingCardDesigner {
+    display: flex;
+    gap: 20px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .designerPanel {
+    flex: 1;
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .previewPanel {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+    background: #f9f9f9;
+    border-radius: 15px;
+  }
+  
+  .cardPreview {
+    padding: 40px;
+    text-align: center;
+    border-radius: 15px;
+    width: 400px;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .input,
+  .select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 100%;
+  }
+  
+  .button {
+    padding: 12px 30px;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .button:hover {
+    background: #ff8787;
+  }
+  
+  .imageGallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: center;
+  }
+  
+  .imageWrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+  }
+  
+  .previewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  
+  .removeButton {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+  }
+  
+  .storySection {
+    margin-top: 30px;
+    text-align: left;
+  }
+  
+  .storySection h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .linkSection {
+    margin-top: 20px;
+    padding: 15px;
+    background: #e0f7fa;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+  
+  .linkSection a {
+    color: #ff6b6b;
+    text-decoration: underline;
+  }

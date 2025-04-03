@@ -1,0 +1,31 @@
+
+@font-face {
+  font-family: 'Dancing Script';
+  src: url('./assets/fonts/DancingScript-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Dancing Script B';
+  src: url('./assets/fonts/DancingScript-Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'PlayFair Display';
+  src: url('./assets/fonts/PlayfairDisplay-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+.dancing-script {
+  font-family: 'Dancing Script', cursive;
+}
+.dancing-script-b {
+  font-family: 'Dancing Script B', cursive;
+}
+.playfair-display {
+  font-family: 'PlayFair Display', serif;
+}
+.red-m {
+  color: #B82132;
+}

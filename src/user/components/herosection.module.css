@@ -1,0 +1,54 @@
+.heroWrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.heroWrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* Màu đen mờ */
+  z-index: 1;
+}
+
+.heroContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.7);
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: zoomInOut 8s ease-in-out infinite; /* Áp dụng animation zoom ra zoom vào */
+}
+
+/* Keyframes cho hiệu ứng zoom ra zoom vào */
+@keyframes zoomInOut {
+  0% {
+    transform: scale(1); /* Kích thước ban đầu */
+  }
+  50% {
+    transform: scale(1.1); /* Phóng to lên 110% */
+  }
+  100% {
+    transform: scale(1); /* Thu nhỏ về kích thước ban đầu */
+  }
+}
+
+.hidden {
+  opacity: 0;
+  transform: translateY(-50px);
+  pointer-events: none;
+}
