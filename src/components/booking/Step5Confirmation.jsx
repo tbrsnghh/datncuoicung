@@ -31,7 +31,7 @@ export default function Step5Confirmation({ eventInfo }) {
         numberOfGuests: eventInfo.guestCount,
         hallId: selectedHall.id,
         menuId: selectedMenu.id,
-        totalPrice: selectedHall.price + selectedMenu.price,
+        totalPrice: selectedHall.price + selectedMenu.totalPrice,
         status: 'pending'
       };
 

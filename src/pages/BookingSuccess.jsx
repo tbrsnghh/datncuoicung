@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 
 const BookingSuccess = () => {
   const { currentBooking } = useSelector((state) => state.booking);
+  console.log(currentBooking);
+  
 
   return (
     <div className="min-h-screen bg-pastel-pink-light flex items-center justify-center p-4">
