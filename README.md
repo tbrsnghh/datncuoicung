@@ -1,4 +1,4 @@
 1. Cài đặt dependencies
-  npm install / yarn install
+npm install
 2. Chạy dự án
-   npm run dev
+npm run dev
