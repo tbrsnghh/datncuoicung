@@ -19,6 +19,8 @@ import Lienhe from "./user/components/lienhe/Lienhe";
 import ThiepCuoi from "./user/components/thiepcuoi/thiepcuoi";
 import ThiepCuoiEditor from "./user/components/thiepcuoi/editthiepcuoi";
 import CreateHallP from "./admin/pages/CreateHallP";
+import BookingSuccess from "./pages/BookingSuccess";
+import EventManage from "./admin/pages/EventManage";
 function App() {
   return (
     <div className="App">
@@ -43,6 +45,8 @@ function App() {
 
         <Route  path="/admin/halls" element={<ProtectedRoute><Sidebar /><HallManage/></ProtectedRoute>}/>
         <Route  path="/admin/hall/create" element={<ProtectedRoute><Sidebar /><CreateHallP/></ProtectedRoute>}/>
+        <Route  path="/booking-success" element={<BookingSuccess/>}/>
+        <Route  path="/admin/event" element={<ProtectedRoute><Sidebar /><EventManage/></ProtectedRoute>}/>
       </Routes>
     </div>
   );

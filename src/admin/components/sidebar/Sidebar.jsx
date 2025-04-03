@@ -15,7 +15,7 @@ import { logout } from "../../../redux/authSlice";
 // Danh sách menu
 const menuItems = [
   { name: "Tổng quan", path: "/admin/home", icon: HomeIcon },
-  { name: "Tiệc đã đặt", path: "/admin/booking", icon: CheckIcon },
+  { name: "Tiệc đã đặt", path: "/admin/event", icon: CheckIcon },
   { name: "Khách hàng", path: "/admin/users", icon: UsersIcon },
   { name: "Sảnh tiệc", path: "/admin/halls", icon: OfficeBuildingIcon },
   { name: "Thực đơn", path: "/admin/menu", icon: MenuIcon },
