@@ -23,7 +23,8 @@ export default function Step5Confirmation({ eventInfo }) {
     try {
       const bookingData = {
         userId: user.id,
-        eventName: eventInfo.eventName,
+        name: eventInfo.eventName,
+        description : eventInfo.description || 'ko trống ko trống',
         eventDate: eventInfo.eventDate,
         startTime: eventInfo.startTime,
         endTime: eventInfo.endTime,
@@ -31,7 +32,7 @@ export default function Step5Confirmation({ eventInfo }) {
         numberOfGuests: eventInfo.guestCount,
         hallId: selectedHall.id,
         menuId: selectedMenu.id,
-        totalPrice: selectedHall.price + selectedMenu.totalPrice,
+        price: selectedHall.price + selectedMenu.totalPrice,
         status: 'pending'
       };
 

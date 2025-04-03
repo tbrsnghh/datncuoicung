@@ -19,7 +19,13 @@ export const fetchHalls = createAsyncThunk(
   "hall/fetchHalls",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BaseURL}/hall`);
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(`${BaseURL}/hall`, config);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Failed to fetch halls");
