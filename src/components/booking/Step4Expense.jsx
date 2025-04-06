@@ -7,8 +7,8 @@ export default function Step4Expense({ eventInfo }) {
   const halls = useSelector((state) => state.hall.halls);
   const menus = useSelector((state) => state.menu.menu);
   
-  const selectedHall = halls && halls[eventInfo.hallId];
-  const selectedMenu = menus && menus[eventInfo.menuId];
+  const selectedHall = halls && halls.find(hall => hall.id === eventInfo.hallId);
+  const selectedMenu = menus && menus.find(menu => menu.id === eventInfo.menuId);
   
   const hallPrice = selectedHall ? selectedHall.price : 0;
   console.log(hallPrice);

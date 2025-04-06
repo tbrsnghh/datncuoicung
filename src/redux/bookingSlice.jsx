@@ -9,7 +9,15 @@ export const createBooking = createAsyncThunk(
   async (bookingData, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`${API_URL}/event`, bookingData, {
+      const response = await axios.post(`${API_URL}/event`, {
+        userId: bookingData.userId,
+        hallId: bookingData.hallId,
+        timeSlotId: bookingData.timeSlotId,
+        menuId: bookingData.menuId,
+        eventDate: bookingData.eventDate,
+        numberOfTables: bookingData.numberOfTables,
+        notes: bookingData.notes || ''
+      }, {
         headers: {
           Authorization: `Bearer ${token}`
         }

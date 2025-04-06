@@ -14,8 +14,8 @@ export default function Step3SelectMenu({ eventInfo, setEventInfo }) {
     dispatch(fetchDishes());
   }, [dispatch]);
 
-  const setMenu = (index) => {
-    setEventInfo({ ...eventInfo, menuId: index });
+  const setMenu = (menuId) => {
+    setEventInfo({ ...eventInfo, menuId });
     setError("");
   };
 
@@ -30,15 +30,15 @@ export default function Step3SelectMenu({ eventInfo, setEventInfo }) {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {menu && menu.map((item, index) => (
+        {menu && menu.map((item) => (
           <div
-            key={index}
+            key={item.id}
             className={`rounded-lg border-2 transition-all cursor-pointer ${
-              eventInfo.menuId === index
+              eventInfo.menuId === item.id
                 ? "border-rose-500 bg-rose-50"
                 : "border-gray-200 hover:border-rose-200"
             }`}
-            onClick={() => setMenu(index)}
+            onClick={() => setMenu(item.id)}
           >
             <div className="p-4">
               <div className="flex justify-between items-start mb-4">
@@ -51,11 +51,11 @@ export default function Step3SelectMenu({ eventInfo, setEventInfo }) {
                   </p>
                 </div>
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                  eventInfo.menuId === index
+                  eventInfo.menuId === item.id
                     ? "bg-rose-500"
                     : "bg-gray-200"
                 }`}>
-                  {eventInfo.menuId === index && (
+                  {eventInfo.menuId === item.id && (
                     <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                     </svg>

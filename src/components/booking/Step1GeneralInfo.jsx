@@ -20,16 +20,6 @@ export default function Step1GeneralInfo({ eventInfo, setEventInfo }) {
       }
     }
 
-    if (!eventInfo.startTime) {
-      newErrors.startTime = "Vui lòng chọn giờ bắt đầu";
-    }
-
-    if (!eventInfo.endTime) {
-      newErrors.endTime = "Vui lòng chọn giờ kết thúc";
-    } else if (eventInfo.startTime && eventInfo.endTime <= eventInfo.startTime) {
-      newErrors.endTime = "Giờ kết thúc phải sau giờ bắt đầu";
-    }
-
     if (!eventInfo.tableCount || eventInfo.tableCount < 1) {
       newErrors.tableCount = "Số bàn phải lớn hơn 0";
     }
@@ -89,39 +79,6 @@ export default function Step1GeneralInfo({ eventInfo, setEventInfo }) {
           {errors.eventDate && (
             <p className="mt-2 text-red-600 text-sm">{errors.eventDate}</p>
           )}
-        </div>
-
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <label className="text-gray-700 text-lg font-medium mb-2 block">Giờ bắt đầu</label>
-            <input
-              type="time"
-              name="startTime"
-              value={eventInfo.startTime}
-              onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border ${
-                errors.startTime ? 'border-red-500 bg-red-50' : 'border-gray-200'
-              } focus:outline-none focus:ring-2 focus:ring-rose-500 transition duration-200`}
-            />
-            {errors.startTime && (
-              <p className="mt-2 text-red-600 text-sm">{errors.startTime}</p>
-            )}
-          </div>
-          <div>
-            <label className="text-gray-700 text-lg font-medium mb-2 block">Giờ kết thúc</label>
-            <input
-              type="time"
-              name="endTime"
-              value={eventInfo.endTime}
-              onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-lg border ${
-                errors.endTime ? 'border-red-500 bg-red-50' : 'border-gray-200'
-              } focus:outline-none focus:ring-2 focus:ring-rose-500 transition duration-200`}
-            />
-            {errors.endTime && (
-              <p className="mt-2 text-red-600 text-sm">{errors.endTime}</p>
-            )}
-          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-6">

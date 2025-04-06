@@ -16,24 +16,50 @@ export default function Step5Confirmation({ eventInfo }) {
   const halls = useSelector((state) => state.hall.halls);
   const menus = useSelector((state) => state.menu.menu);
   
-  const selectedHall = halls && halls[eventInfo.hallId];
-  const selectedMenu = menus && menus[eventInfo.menuId];
+  console.log('Event Info:', eventInfo);
+  console.log('Halls:', halls);
+  console.log('Menus:', menus);
+  console.log('Selected Hall ID:', eventInfo.hallId, 'Type:', typeof eventInfo.hallId);
+  console.log('Selected Menu ID:', eventInfo.menuId, 'Type:', typeof eventInfo.menuId);
+  
+  // Log từng menu để kiểm tra cấu trúc
+  if (menus) {
+    menus.forEach(menu => {
+      console.log('Menu:', menu);
+      console.log('Menu ID:', menu.id, 'Type:', typeof menu.id);
+    });
+  }
+  
+  const selectedHall = halls && halls.find(hall => hall.id === eventInfo.hallId);
+  const selectedMenu = menus && menus.find(menu => menu.id === eventInfo.menuId);
+  
+  console.log('Selected Hall:', selectedHall);
+  console.log('Selected Menu:', selectedMenu);
+
+  // Kiểm tra nếu không tìm thấy sảnh hoặc menu
+  if (!selectedHall || !selectedMenu) {
+    return (
+      <div className="w-5/6 mx-auto text-left bg-white p-6 rounded shadow-md">
+        <div className="text-center text-red-600">
+          <h2 className="text-2xl font-semibold mb-4">Lỗi</h2>
+          <p>Không tìm thấy thông tin sảnh hoặc menu. Vui lòng quay lại bước trước.</p>
+          <p className="mt-2 text-sm">Hall ID: {eventInfo.hallId}, Menu ID: {eventInfo.menuId}</p>
+          <p className="mt-2 text-sm">Available Menus: {menus ? menus.map(m => m.id).join(', ') : 'No menus'}</p>
+        </div>
+      </div>
+    );
+  }
   
   const handleConfirm = async () => {
     try {
       const bookingData = {
         userId: user.id,
-        name: eventInfo.eventName,
-        description : eventInfo.description || 'ko trống ko trống',
-        eventDate: eventInfo.eventDate,
-        startTime: eventInfo.startTime,
-        endTime: eventInfo.endTime,
-        numberOfTables: eventInfo.tableCount,
-        numberOfGuests: eventInfo.guestCount,
         hallId: selectedHall.id,
+        timeSlotId: eventInfo.timeSlotId,
         menuId: selectedMenu.id,
-        price: selectedHall.price + selectedMenu.totalPrice,
-        status: 'pending'
+        eventDate: eventInfo.eventDate,
+        numberOfTables: eventInfo.tableCount,
+        notes: eventInfo.description || ''
       };
 
       await dispatch(createBooking(bookingData)).unwrap();
@@ -57,9 +83,9 @@ export default function Step5Confirmation({ eventInfo }) {
             <p><span className="font-medium">Thời gian:</span> {eventInfo.startTime} - {eventInfo.endTime}</p>
             <p><span className="font-medium">Số bàn:</span> {eventInfo.tableCount}</p>
             <p><span className="font-medium">Số khách:</span> {eventInfo.guestCount}</p>
-            <p><span className="font-medium">Hội trường:</span> {selectedHall?.name}</p>
-            <p><span className="font-medium">Menu:</span> {selectedMenu?.name}</p>
-            <p><span className="font-medium">Tổng chi phí:</span> {(selectedHall?.price + selectedMenu?.price).toLocaleString()} VNĐ</p>
+            <p><span className="font-medium">Hội trường:</span> {selectedHall.name}</p>
+            <p><span className="font-medium">Menu:</span> {selectedMenu.name}</p>
+            <p><span className="font-medium">Tổng chi phí:</span> {(selectedHall.price + selectedMenu.price).toLocaleString()} VNĐ</p>
           </div>
         </div>
 

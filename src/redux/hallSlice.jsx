@@ -33,6 +33,50 @@ export const fetchHalls = createAsyncThunk(
   }
 );
 
+export const fetchTimeSlots = createAsyncThunk(
+  "hall/fetchTimeSlots",
+  async ({ hallId, date }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(`${BaseURL}/hall/${hallId}/available-time-slots`, {
+        params: { date },
+        ...config
+      });
+      // API trả về { hallId, date, availableTimeSlots: [...] }
+      return response.data.availableTimeSlots;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to fetch time slots");
+    }
+  }
+);
+
+export const checkHallAvailability = createAsyncThunk(
+  "hall/checkHallAvailability",
+  async ({ hallId, eventDate, timeSlotId }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.post(
+        `${BaseURL}/event/check-hall-availability`,
+        { hallId, eventDate, timeSlotId },
+        config
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to check hall availability");
+    }
+  }
+);
+
 export const createHall = createAsyncThunk(
   "hall/createHall",
   async (hall, { rejectWithValue }) => {
@@ -90,6 +134,7 @@ export const deleteHall = createAsyncThunk(
 // Khởi tạo state ban đầu
 const initialState = {
   halls: [],
+  timeSlots: [],
   loading: false,
   error: null,
 };
@@ -98,7 +143,11 @@ const initialState = {
 const hallSlice = createSlice({
   name: "hall",
   initialState,
-  reducers: {},
+  reducers: {
+    clearTimeSlots: (state) => {
+      state.timeSlots = [];
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchHalls.pending, handlePending)
@@ -107,6 +156,17 @@ const hallSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchHalls.rejected, handleRejected)
+      .addCase(fetchTimeSlots.pending, handlePending)
+      .addCase(fetchTimeSlots.fulfilled, (state, action) => {
+        state.timeSlots = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchTimeSlots.rejected, handleRejected)
+      .addCase(checkHallAvailability.pending, handlePending)
+      .addCase(checkHallAvailability.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(checkHallAvailability.rejected, handleRejected)
       .addCase(createHall.pending, handlePending)
       .addCase(createHall.fulfilled, (state, action) => {
         state.halls.push(action.payload);
@@ -124,7 +184,6 @@ const hallSlice = createSlice({
       .addCase(updateHall.rejected, handleRejected)
       .addCase(deleteHall.pending, handlePending)
       .addCase(deleteHall.fulfilled, (state, action) => {
-        
         state.halls = state.halls.filter((hall) => hall.id !== action.payload);
         state.loading = false;
       })
@@ -132,5 +191,5 @@ const hallSlice = createSlice({
   },
 });
 
-export const {} = hallSlice.actions;
+export const { clearTimeSlots } = hallSlice.actions;
 export default hallSlice.reducer;
