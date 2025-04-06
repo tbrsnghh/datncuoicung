@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteHall, fetchHalls } from "../../redux/hallSlice";
+import { deleteHall, fetchHalls, fetchHallImages } from "../../redux/hallSlice";
 import SubHeader from "../components/sub-header/SubHeader";
 import Search from "../components/search/Search";
 import { DeleteBtn, EditBtn, DetailBtn } from "../components/mini/Btn";
@@ -12,20 +12,32 @@ import Swal from "sweetalert2";
 export default function HallManage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { halls, loading, error } = useSelector((state) => state.hall);
+  const { halls, loading, error, hallImages } = useSelector((state) => state.hall);
   const [selectedHall, setSelectedHall] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [editingHall, setEditingHall] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [isLoadingImages, setIsLoadingImages] = useState(false);
 
   useEffect(() => {
     dispatch(fetchHalls());
+    halls.forEach(hall => {
+      dispatch(fetchHallImages(hall.id));
+    });
+    console.log(hallImages);
   }, [dispatch]);
 
   useEffect(() => {
     setSearchResults(halls);
   }, [halls]);
+
+  useEffect(() => {
+    // Fetch images for selected hall when it changes
+    if (selectedHall) {
+      dispatch(fetchHallImages(selectedHall.id));
+    }
+  }, [dispatch, selectedHall]);
 
   const openModal = (hall) => {
     setSelectedHall(hall);
@@ -37,9 +49,18 @@ export default function HallManage() {
     setSelectedHall(null);
   };
 
-  const openEditModal = (hall) => {
-    setEditingHall(hall);
-    setShowEditModal(true);
+  const openEditModal = async (hall) => {
+    try {
+      setIsLoadingImages(true);
+      // Gọi API lấy ảnh trước khi mở modal
+      await dispatch(fetchHallImages(hall.id)).unwrap();
+      setEditingHall(hall);
+      setShowEditModal(true);
+    } catch (error) {
+      Swal.fire("Lỗi!", "Không thể tải ảnh sảnh. Vui lòng thử lại.", "error");
+    } finally {
+      setIsLoadingImages(false);
+    }
   };
 
   const closeEditModal = () => {
@@ -117,33 +138,45 @@ export default function HallManage() {
           <table className="w-full border-collapse text-center">
             <thead className="bg-[#f9c5d1] text-[#d63384]">
               <tr className="border-b">
+                <th className="p-3">Ảnh</th>
                 <th className="p-3">Tên sảnh</th>
                 <th className="p-3">Sức chứa</th>
-                {/* <th className="p-3">Trạng thái</th> */}
                 <th className="p-3"></th>
               </tr>
             </thead>
             <tbody>
-              {searchResults.map((hall) => (
-                <tr key={hall.id} className="border-b hover:bg-[#fff5f7] transition">
-                  <td className="p-3">{hall.name}</td>
-                  <td className="p-3">{hall.capacity} người</td>
-                  {/* <td className="p-3">
-                    <span
-                      className={`px-3 py-1 rounded-full text-white ${
-                        hall.status === "Hoạt động" ? "bg-green-500" : "bg-red-500"
-                      }`}
-                    >
-                      {hall.status}
-                    </span>
-                  </td> */}
-                  <td className="p-3 space-x-2">
-                    <EditBtn onclick={() => openEditModal(hall)} />
-                    <DeleteBtn onclick={() => handleDelete(hall.id)} />
-                    <DetailBtn onclick={() => openModal(hall)} />
-                  </td>
-                </tr>
-              ))}
+              {searchResults.map((hall) => {
+                const images = hallImages[hall.id] || [];
+                const primaryImage = images.find(img => img.isPrimary)?.fileName || images[0]?.fileName || null;
+                const imageUrl = primaryImage 
+                  ? `http://localhost:8081/api/hall/${hall.id}/images/${primaryImage}`
+                  : null;
+                
+                return (
+                  <tr key={hall.id} className="border-b hover:bg-[#fff5f7] transition">
+                    <td className="p-3">
+                      {imageUrl ? (
+                        <img 
+                          src={imageUrl} 
+                          alt={hall.name} 
+                          className="w-16 h-16 object-cover rounded mx-auto"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 bg-gray-200 rounded mx-auto flex items-center justify-center">
+                          <span className="text-gray-400 text-xs">Không có ảnh</span>
+                        </div>
+                      )}
+                    </td>
+                    <td className="p-3">{hall.name}</td>
+                    <td className="p-3">{hall.capacity} người</td>
+                    <td className="p-3 space-x-2">
+                      <EditBtn onclick={() => openEditModal(hall)} />
+                      <DeleteBtn onclick={() => handleDelete(hall.id)} />
+                      <DetailBtn onclick={() => openModal(hall)} />
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

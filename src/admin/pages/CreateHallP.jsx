@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createHall } from "../../redux/hallSlice";
+import { createHall, uploadHallImage } from "../../redux/hallSlice";
 import { useNavigate } from "react-router-dom";
 import SubHeader from "../components/sub-header/SubHeader";
 import Swal from "sweetalert2";
@@ -14,6 +14,9 @@ export default function CreateHallP() {
     description: "",
     price: ""
   });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,15 +26,41 @@ export default function CreateHallP() {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    
     try {
-      await dispatch(createHall(formData)).unwrap();
+      // First create the hall
+      const result = await dispatch(createHall(formData)).unwrap();
+      
+      // If image is selected, upload it
+      if (selectedImage && result.id) {
+        await dispatch(uploadHallImage({ 
+          hallId: result.id, 
+          imageFile: selectedImage 
+        })).unwrap();
+      }
+      
       Swal.fire("Thành công!", "Sảnh đã được tạo.", "success");
       navigate("/admin/halls");
     } catch (error) {
       Swal.fire("Lỗi!", error.message || "Có lỗi xảy ra khi tạo sảnh.", "error");
       console.error("Failed to create hall:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -106,12 +135,36 @@ export default function CreateHallP() {
             />
           </div>
 
+          <div className="flex flex-col">
+            <label className="text-gray-700 text-sm font-bold mb-2">
+              Ảnh sảnh
+            </label>
+            <div className="flex flex-col items-center">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="border-2 border-gray-200 rounded-lg px-4 py-2 w-full focus:outline-none focus:border-[#d63384] transition duration-200"
+              />
+              {imagePreview && (
+                <div className="mt-4">
+                  <img 
+                    src={imagePreview} 
+                    alt="Preview" 
+                    className="max-w-xs max-h-48 rounded-lg shadow-md"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className="flex justify-end pt-4">
             <button
               type="submit"
               className="bg-[#d63384] hover:bg-[#b02a6d] text-white font-bold py-2 px-6 rounded-lg transition duration-200"
+              disabled={isSubmitting}
             >
-              Thêm sảnh
+              {isSubmitting ? "Đang xử lý..." : "Thêm sảnh"}
             </button>
           </div>
         </form>
