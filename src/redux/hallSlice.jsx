@@ -256,9 +256,10 @@ const hallSlice = createSlice({
       .addCase(createHall.rejected, handleRejected)
       .addCase(updateHall.pending, handlePending)
       .addCase(updateHall.fulfilled, (state, action) => {
-        const index = state.halls.findIndex((hall) => hall.id === action.payload.hall.id);
+        const updatedHall = action.payload;
+        const index = state.halls.findIndex((hall) => hall.id === updatedHall.id);
         if (index !== -1) {
-          state.halls[index] = action.payload.hall;
+          state.halls[index] = updatedHall;
         }
         state.loading = false;
       })

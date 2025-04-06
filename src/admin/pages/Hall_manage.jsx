@@ -25,7 +25,6 @@ export default function HallManage() {
     halls.forEach(hall => {
       dispatch(fetchHallImages(hall.id));
     });
-    console.log(hallImages);
   }, [dispatch]);
 
   useEffect(() => {
