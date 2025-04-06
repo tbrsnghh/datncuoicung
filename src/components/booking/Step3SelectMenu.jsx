@@ -1,87 +1,103 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMenus } from '../../redux/menuSlice';
 import { fetchDishes } from '../../redux/dishSlice';
 
 export default function Step3SelectMenu({ eventInfo, setEventInfo }) {
   const dispatch = useDispatch();
-  const menu = useSelector((state) => state.menu.menu);
+  const { menu, loading, error } = useSelector((state) => state.menu);
   const dishes = useSelector((state) => state.dish.dish);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     dispatch(fetchMenus());
     dispatch(fetchDishes());
   }, [dispatch]);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEventInfo({ ...eventInfo, [name]: value });
+  };
+
   const setMenu = (menuId) => {
     setEventInfo({ ...eventInfo, menuId });
-    setError("");
   };
+
+  // Tính tổng giá dựa trên số bàn và giá menu
+  const selectedMenu = menu?.find(item => item.id === eventInfo.menuId);
+  const totalPrice = selectedMenu && eventInfo.tableCount 
+    ? selectedMenu.totalPrice * eventInfo.tableCount 
+    : 0;
 
   return (
     <div className="w-5/6 mx-auto text-left bg-white p-6 rounded shadow-md">
-      <h2 className="text-2xl font-semibold mb-6">Chọn menu</h2>
+      <h2 className="text-2xl font-semibold mb-6">Chọn menu và số bàn</h2>
 
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
-          {error}
+      <div className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Số bàn
+          </label>
+          <input
+            type="number"
+            name="tableCount"
+            value={eventInfo.tableCount}
+            onChange={handleChange}
+            min="1"
+            className="w-full p-2 border border-gray-300 rounded focus:ring-rose-500 focus:border-rose-500"
+            placeholder="Nhập số bàn"
+          />
         </div>
-      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {menu && menu.map((item) => (
-          <div
-            key={item.id}
-            className={`rounded-lg border-2 transition-all cursor-pointer ${
-              eventInfo.menuId === item.id
-                ? "border-rose-500 bg-rose-50"
-                : "border-gray-200 hover:border-rose-200"
-            }`}
-            onClick={() => setMenu(item.id)}
-          >
-            <div className="p-4">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {item.name}
-                  </h3>
-                  <p className="text-rose-600 font-medium mt-1">
+        <div>
+          <h3 className="text-lg font-medium mb-4">Danh sách menu</h3>
+          {loading ? (
+            <p>Đang tải menu...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : menu && menu.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {menu.map((item) => (
+                <div
+                  key={item.id}
+                  className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                    eventInfo.menuId === item.id
+                      ? 'border-rose-500 bg-rose-50'
+                      : 'border-gray-200 hover:border-rose-200'
+                  }`}
+                  onClick={() => setMenu(item.id)}
+                >
+                  <h4 className="font-medium">{item.name}</h4>
+                  <p className="text-gray-600">{item.description}</p>
+                  <p className="text-rose-600 font-medium mt-2">
                     {item.totalPrice.toLocaleString()} VNĐ
                   </p>
                 </div>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                  eventInfo.menuId === item.id
-                    ? "bg-rose-500"
-                    : "bg-gray-200"
-                }`}>
-                  {eventInfo.menuId === item.id && (
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                  )}
-                </div>
-              </div>
+              ))}
+            </div>
+          ) : (
+            <p>Không có menu nào khả dụng</p>
+          )}
+        </div>
 
-              <div className="space-y-2">
-                {dishes && dishes
-                  .filter(dish => dish.menuId === item.id)
-                  .map((dish, dishIndex) => (
-                    <div
-                      key={dishIndex}
-                      className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
-                    >
-                      <div className="flex items-center">
-                        <span className="w-2 h-2 bg-gray-300 rounded-full mr-2"></span>
-                        <span className="text-gray-700">{dish.name}</span>
-                      </div>
-                      <span className="text-gray-500">{dish.price.toLocaleString()} VNĐ</span>
-                    </div>
-                  ))}
+        {selectedMenu && eventInfo.tableCount > 0 && (
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+            <h3 className="text-lg font-medium mb-2">Chi phí menu</h3>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span>Giá menu:</span>
+                <span>{selectedMenu.totalPrice.toLocaleString()} VNĐ</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Số bàn:</span>
+                <span>{eventInfo.tableCount}</span>
+              </div>
+              <div className="flex justify-between font-bold text-lg pt-2 border-t">
+                <span>Tổng cộng:</span>
+                <span>{totalPrice.toLocaleString()} VNĐ</span>
               </div>
             </div>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

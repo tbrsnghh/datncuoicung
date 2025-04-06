@@ -12,7 +12,7 @@ export default function Step4Expense({ eventInfo }) {
   
   const hallPrice = selectedHall ? selectedHall.price : 0;
   console.log(hallPrice);
-  const menuPrice = selectedMenu ? selectedMenu.totalPrice : 0;
+  const menuPrice = selectedMenu ? selectedMenu.totalPrice * eventInfo.tableCount : 0;
   console.log(menuPrice);
   const totalPrice = hallPrice + menuPrice;
 
@@ -29,7 +29,7 @@ export default function Step4Expense({ eventInfo }) {
               <span>{hallPrice.toLocaleString()} VNĐ</span>
             </div>
             <div className="flex justify-between">
-              <span>Menu:</span>
+              <span>Menu ({eventInfo.tableCount} bàn):</span>
               <span>{menuPrice.toLocaleString()} VNĐ</span>
             </div>
             <div className="flex justify-between font-bold text-lg pt-2 border-t">

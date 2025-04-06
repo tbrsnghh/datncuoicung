@@ -42,20 +42,16 @@ const Booking = () => {
           setError("Vui lòng nhập tên sự kiện");
           return false;
         }
-        if (!eventInfo.eventDate) {
-          setError("Vui lòng chọn ngày tổ chức");
-          return false;
-        }
-        if (!eventInfo.tableCount || parseInt(eventInfo.tableCount) < 1) {
-          setError("Số bàn phải lớn hơn 0");
-          return false;
-        }
         if (!eventInfo.guestCount || parseInt(eventInfo.guestCount) < 1) {
           setError("Số khách phải lớn hơn 0");
           return false;
         }
         break;
       case 2:
+        if (!eventInfo.eventDate) {
+          setError("Vui lòng chọn ngày tổ chức");
+          return false;
+        }
         if (eventInfo.hallId === null) {
           setError("Vui lòng chọn một hội trường");
           return false;
@@ -66,6 +62,10 @@ const Booking = () => {
         }
         break;
       case 3:
+        if (!eventInfo.tableCount || parseInt(eventInfo.tableCount) < 1) {
+          setError("Số bàn phải lớn hơn 0");
+          return false;
+        }
         if (eventInfo.menuId === null) {
           setError("Vui lòng chọn một menu");
           return false;
