@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addDish } from "../../../redux/dishSlice";
+import { addDish, uploadDishImage } from "../../../redux/dishSlice";
 import Swal from "sweetalert2";
 
 export default function DishAddModal({ onClose }) {
@@ -9,14 +9,33 @@ export default function DishAddModal({ onClose }) {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
   const [price, setPrice] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAdd = async () => {
     try {
-      await dispatch(addDish({ name, description, price, image })).unwrap();
-      Swal.fire("Thành công!", "Món ăn đã được thêm thành công.", "success")
+      setIsSubmitting(true);
+      const newDish = await dispatch(addDish({ name, description, price, image })).unwrap();
+      Swal.fire("Thành công!", "Món ăn đã được thêm thành công.", "success");
       onClose();
     } catch (error) {
       Swal.fire("Lỗi!", error.message || "Có lỗi xảy ra.", "error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      try {
+        setIsSubmitting(true);
+        await dispatch(uploadDishImage({ dishId: null, imageFile: file })).unwrap();
+        Swal.fire("Thành công!", "Ảnh đã được tải lên thành công.", "success");
+      } catch (error) {
+        Swal.fire("Lỗi!", error.message || "Có lỗi xảy ra khi tải lên ảnh.", "error");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -68,6 +87,16 @@ export default function DishAddModal({ onClose }) {
               onChange={(e) => setImage(e.target.value)}
             />
           </label>
+
+          <label className="block">
+            <span className="text-sm text-gray-600">Tải lên ảnh</span>
+            <input
+              type="file"
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onChange={handleImageUpload}
+              disabled={isSubmitting}
+            />
+          </label>
         </div>
 
         <div className="flex justify-end gap-2 mt-4">
@@ -80,6 +109,7 @@ export default function DishAddModal({ onClose }) {
           <button
             className="px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition"
             onClick={handleAdd}
+            disabled={isSubmitting}
           >
             Thêm
           </button>
