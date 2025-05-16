@@ -21,6 +21,8 @@ import ThiepCuoiEditor from "./user/components/thiepcuoi/editthiepcuoi";
 import CreateHallP from "./admin/pages/CreateHallP";
 import BookingSuccess from "./pages/BookingSuccess";
 import EventManage from "./admin/pages/EventManage";
+import Profile from "./pages/Profile";
+import ForgotPass from "./pages/ForgotPass";
 function App() {
   return (
     <div className="App">
@@ -31,7 +33,9 @@ function App() {
         <Route path="/Thucdon" element={<Thucdon />} />
         <Route path="/Lienhe" element={<Lienhe />} />
         <Route path="/thiepcuoi" element={<ThiepCuoi />} />
-        <Route path="/edit-template/:id" element={<ThiepCuoiEditor />} />
+        <Route path="/edit-template/:id" element={<ThiepCuoiEditor />} />.
+        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/forgot-password" element={<ForgotPass />} />
         {/* login */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

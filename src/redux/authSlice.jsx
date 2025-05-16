@@ -3,6 +3,7 @@ import axios from "axios";
 
 const BaseURL = "http://localhost:8081/";
 
+
 // Hàm helper để xử lý trạng thái pending, fulfilled, rejected
 const handlePending = (state) => {
   state.loading = true;
@@ -110,6 +111,8 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("userId");
     },
     setUser: (state, action) => {
       state.user = action.payload;
@@ -124,6 +127,8 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         localStorage.setItem("token", action.payload.token);
+        localStorage.setItem("userId", action.payload.user.id);
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -136,9 +141,9 @@ const authSlice = createSlice({
       .addCase(registerUser.pending, handlePending)
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        localStorage.setItem("token", action.payload.token);
+        //state.user = action.payload.user;
+        //state.token = action.payload.token;
+        //localStorage.setItem("token", action.payload.token);
       })
       .addCase(registerUser.rejected, handleRejected)
 

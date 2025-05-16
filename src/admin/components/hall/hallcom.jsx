@@ -18,7 +18,7 @@ const HallSelected = ({ selectedHall }) => {
           <div className="bg-gray-50 p-3 rounded-lg">
             <p className="text-gray-600">
               <span className="font-medium">Trạng thái:</span>
-              <span className="ml-2">{selectedHall.status}</span>
+              <span className="ml-2">{selectedHall.status || "Hoạt động"}</span>
             </p>
           </div>
 
@@ -38,23 +38,32 @@ const HallSelected = ({ selectedHall }) => {
         </div>
 
         {/* Lịch trình */}
-        <div>
-          <h4 className="font-semibold text-gray-800 mb-3">Lịch trình sử dụng:</h4>
-          <div className="bg-gray-50 rounded-lg overflow-hidden">
-            {selectedHall.schedule?.map((event, index) => (
-              <div 
-                key={index} 
-                className="p-3 border-b last:border-0 hover:bg-white transition-colors duration-200"
-              >
-                <span className="font-medium text-gray-700">{event.date}</span>
-                <span className="mx-2">•</span>
-                <span>{event.time}</span>
-                <span className="mx-2">-</span>
-                <span className="text-gray-600">{event.event}</span>
-              </div>
-            ))}
+        {selectedHall.schedule && selectedHall.schedule.length > 0 ? (
+          <div>
+            <h4 className="font-semibold text-gray-800 mb-3">Lịch trình sử dụng:</h4>
+            <div className="bg-gray-50 rounded-lg overflow-hidden">
+              {selectedHall.schedule.map((event, index) => (
+                <div 
+                  key={index} 
+                  className="p-3 border-b last:border-0 hover:bg-white transition-colors duration-200"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <span className="font-medium text-gray-700">{event.date}</span>
+                      <span className="mx-2">•</span>
+                      <span>{event.time}</span>
+                    </div>
+                    <span className="text-gray-600">{event.event}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="text-center py-4 text-gray-500">
+            <p>Chưa có lịch trình sử dụng</p>
+          </div>
+        )}
       </div>
     )
 }

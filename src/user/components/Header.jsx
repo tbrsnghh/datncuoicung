@@ -3,7 +3,19 @@ import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const location = useLocation(); 
+
+  useEffect(() => {
+    // Kiểm tra đăng nhập khi component mount và khi location thay đổi
+    const checkLogin = () => {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
+      setIsLoggedIn(!!(token && userId));
+    };
+
+    checkLogin();
+  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,16 +49,18 @@ const Header = () => {
           { to: "/", text: "TRANG CHỦ" },
           { to: "/sanhtiec", text: "SẢNH TIỆC" },
           { to: "/Thucdon", text: "THỰC ĐƠN" },
-          { to: "/thiepcuoi", text: "TẠO THIỆP CƯỚI" },
+          // { to: "/thiepcuoi", text: "TẠO THIỆP CƯỚI" },
           { to: "/booking", text: "ĐẶT LỊCH" },
           { to: "/Lienhe", text: "LIÊN HỆ" },
-          {to:"/login",text:"ĐĂNG NHẬP"},
+          { 
+            to: isLoggedIn ? "/profile" : "/login", 
+            text: isLoggedIn ? "TÀI KHOẢN" : "ĐĂNG NHẬP"
+          },
         ].map(({ to, text }) => (
           <li key={to}>
             <Link 
               to={to} 
               className="playfair-display relative text-white text-lg font-bold transition duration-300 ease-in-out shadow-lg hover:scale-110 hover:text-[#FFE6C9] hover:shadow-[#FCC6FF]"
-              
             >
               {text}
               {/* Hiệu ứng gạch dưới khi hover */}

@@ -27,10 +27,10 @@ const Booking = () => {
 
   // Nếu chưa đăng nhập, chuyển hướng về login
   useEffect(() => {
-    if (!token) {
+    if (!token || localStorage.getItem("user") === null) {
       setTimeout(() => {
         navigate("/login", { state: { from: location.pathname } });
-      }, 3000);
+      }, 1500);
     }
   }, [token, navigate, location]);
 

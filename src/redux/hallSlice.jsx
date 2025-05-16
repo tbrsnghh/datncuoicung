@@ -211,11 +211,25 @@ export const setPrimaryHallImage = createAsyncThunk(
   }
 );
 
+// Thunk: Lấy thông tin sảnh theo ID
+export const fetchHallById = createAsyncThunk(
+  'halls/fetchHallById',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BaseURL}/hall/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Failed to fetch hall');
+    }
+  }
+);
+
 // Khởi tạo state ban đầu
 const initialState = {
   halls: [],
   timeSlots: [],
   hallImages: {},
+  currentHall: null,
   loading: false,
   error: null,
 };
@@ -328,7 +342,20 @@ const hallSlice = createSlice({
         }
         state.loading = false;
       })
-      .addCase(setPrimaryHallImage.rejected, handleRejected);
+      .addCase(setPrimaryHallImage.rejected, handleRejected)
+      // Fetch hall by ID
+      .addCase(fetchHallById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchHallById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentHall = action.payload;
+      })
+      .addCase(fetchHallById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || 'Failed to fetch hall';
+      });
   },
 });
 
