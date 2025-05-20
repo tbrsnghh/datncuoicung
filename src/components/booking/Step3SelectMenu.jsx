@@ -85,7 +85,7 @@ export default function Step3SelectMenu({ eventInfo, setEventInfo }) {
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span>Giá menu:</span>
-                <span>{selectedMenu.Dishes.reduce((total, dish) => total + dish.price, 0).toLocaleString())} VNĐ</span>
+                <span>{selectedMenu.Dishes.reduce((total, dish) => total + dish.price, 0).toLocaleString()} VNĐ</span>
               </div>
               <div className="flex justify-between">
                 <span>Số bàn:</span>
