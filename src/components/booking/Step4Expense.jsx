@@ -6,15 +6,18 @@ export default function Step4Expense({ eventInfo }) {
   
   const halls = useSelector((state) => state.hall.halls);
   const menus = useSelector((state) => state.menu.menu);
+  const timeslot = eventInfo.timeSlotId == 8 ? "08:00 - 14:00" : eventInfo.timeSlotId == 9 ? "15:00 - 20:00" : "17:00 - 23:00";
+
   
-  const selectedHall = halls && halls[eventInfo.hallId];
-  const selectedMenu = menus && menus[eventInfo.menuId];
+  const selectedHall = halls && halls.find(hall => hall.id === eventInfo.hallId);
+  const selectedMenu = menus && menus.find(menu => menu.id === eventInfo.menuId);
   
   const hallPrice = selectedHall ? selectedHall.price : 0;
-  console.log(hallPrice);
-  const menuPrice = selectedMenu ? selectedMenu.totalPrice : 0;
-  console.log(menuPrice);
+  //console.log(hallPrice);
+  const menuPrice = selectedMenu ? selectedMenu.totalPrice * eventInfo.tableCount : 0;
+  //console.log(menuPrice);
   const totalPrice = hallPrice + menuPrice;
+  //console.log(timeslot)
 
   return (
     <div className="w-5/6 mx-auto text-left bg-white p-6 rounded shadow-md">
@@ -29,7 +32,7 @@ export default function Step4Expense({ eventInfo }) {
               <span>{hallPrice.toLocaleString()} VNĐ</span>
             </div>
             <div className="flex justify-between">
-              <span>Menu:</span>
+              <span>Menu ({eventInfo.tableCount} bàn):</span>
               <span>{menuPrice.toLocaleString()} VNĐ</span>
             </div>
             <div className="flex justify-between font-bold text-lg pt-2 border-t">
@@ -44,7 +47,7 @@ export default function Step4Expense({ eventInfo }) {
           <div className="space-y-2">
             <p><span className="font-medium">Tên sự kiện:</span> {eventInfo.eventName}</p>
             <p><span className="font-medium">Ngày tổ chức:</span> {eventInfo.eventDate}</p>
-            <p><span className="font-medium">Thời gian:</span> {eventInfo.startTime} - {eventInfo.endTime}</p>
+            <p><span className="font-medium">Thời gian:</span> {timeslot}</p>
             <p><span className="font-medium">Số bàn:</span> {eventInfo.tableCount}</p>
             <p><span className="font-medium">Số khách:</span> {eventInfo.guestCount}</p>
             <p><span className="font-medium">Hội trường:</span> {selectedHall?.name}</p>

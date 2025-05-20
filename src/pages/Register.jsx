@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../redux/authSlice";
+import Swal from 'sweetalert2';
 
 export default function Register() {
   const dispatch = useDispatch();
@@ -11,21 +12,66 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Xử lý lỗi từ Redux state
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Đăng ký thất bại!',
+        text: error.message || 'Có lỗi xảy ra khi đăng ký tài khoản',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#e11d48',
+      });
+    }
+  }, [error]);
+
   const handleRegister = async () => {
+    // Kiểm tra các trường bắt buộc
+    if (!username || !email || !password) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Thiếu thông tin!',
+        text: 'Vui lòng điền đầy đủ thông tin đăng ký',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#e11d48',
+      });
+      return;
+    }
+
     try {
       const result = await dispatch(registerUser({ username, email, password }));
 
       if (registerUser.fulfilled.match(result)) {
-        navigate("/login");
+        Swal.fire({
+          icon: 'success',
+          title: 'Đăng ký thành công!',
+          text: 'Vui lòng đăng nhập để tiếp tục',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#e11d48',
+        }).then(() => {
+          navigate("/login");
+        });
       }
     } catch (error) {
-      console.error("Đăng ký thất bại", error);
+      // Xử lý lỗi từ API response
+      const errorMessage = error.response?.data?.message || error.message || 'Có lỗi xảy ra khi đăng ký tài khoản';
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Đăng ký thất bại!',
+        text: errorMessage,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#e11d48',
+      });
     }
   };
 
   return (
     <>
       <div className="flex items-center justify-center min-h-screen bg-rose-100">
+        <h1 className="text-5xl font-bold text-center mb-6 text-rose-500 absolute top-20 dancing-script-b">
+          Nhà hàng tiệc cưới Đông Á
+        </h1>
         <div className="bg-white p-8 rounded-lg shadow-md w-96">
           <h2 className="text-2xl font-bold text-center mb-6 text-rose-500">
             Đăng ký tài khoản
@@ -76,8 +122,6 @@ export default function Register() {
           >
             {loading ? "Đang đăng ký..." : "Đăng ký"}
           </button>
-
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
           <p className="mt-4 text-center text-sm text-gray-600">
             Đã có tài khoản?

@@ -1,24 +1,43 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { updateDish } from "../../../redux/dishSlice";
+import { updateDish, uploadDishImage } from "../../../redux/dishSlice";
 import Swal from "sweetalert2";
+
 export default function DishEditModal({ dish, onClose }) {
   const dispatch = useDispatch();
   const [name, setName] = useState(dish.name);
   const [description, setDescription] = useState(dish.description);
   const [image, setImage] = useState(dish.image);
   const [price, setPrice] = useState(dish.price);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSave = async () => {
     try {
+      setIsSubmitting(true);
       await dispatch(updateDish({ id: dish.id, name, description, image, price })).unwrap();
       Swal.fire("Thành công!", "Món ăn đã được sửa thành công.", "success");
       onClose();
     } catch (error) {
       Swal.fire("Lỗi!", error.message || "Có lỗi xảy ra.", "error");
+    } finally {
+      setIsSubmitting(false);
     }
   };
-  
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      try {
+        setIsSubmitting(true);
+        await dispatch(uploadDishImage({ dishId: dish.id, imageFile: file })).unwrap();
+        Swal.fire("Thành công!", "Ảnh đã được tải lên thành công.", "success");
+      } catch (error) {
+        Swal.fire("Lỗi!", error.message || "Có lỗi xảy ra khi tải lên ảnh.", "error");
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-black/20 transition-opacity">
@@ -68,6 +87,16 @@ export default function DishEditModal({ dish, onClose }) {
               onChange={(e) => setImage(e.target.value)}
             />
           </label>
+
+          <label className="block">
+            <span className="text-sm text-gray-600">Tải lên ảnh</span>
+            <input
+              type="file"
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onChange={handleImageUpload}
+              disabled={isSubmitting}
+            />
+          </label>
         </div>
 
         <div className="flex justify-end gap-2 mt-4">
@@ -80,6 +109,7 @@ export default function DishEditModal({ dish, onClose }) {
           <button
             className="px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition"
             onClick={handleSave}
+            disabled={isSubmitting}
           >
             Lưu
           </button>

@@ -2,6 +2,20 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const BaseURL = "http://localhost:8081/";
+
+// Thunk: Lấy menu theo ID
+export const fetchMenuById = createAsyncThunk(
+  "menu/fetchMenuById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BaseURL}api/menu/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to fetch menu");
+    }
+  }
+);
+
 export const fetchMenus = createAsyncThunk("menu/fetchMenus", async () => {
   const response = await axios.get(`${BaseURL}api/menu`);
   return response.data;
@@ -40,6 +54,7 @@ export const deleteMenu = createAsyncThunk("menu/deleteMenu", async (id) => {
 
 const initialState = {
   menu: [],
+  currentMenu: null,
   loading: false,
   error: null,
 };
@@ -50,6 +65,19 @@ const menuSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // Fetch menu by ID
+      .addCase(fetchMenuById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchMenuById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentMenu = action.payload;
+      })
+      .addCase(fetchMenuById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
       .addCase(fetchMenus.pending, (state) => {
         state.loading = true;
         state.error = null;

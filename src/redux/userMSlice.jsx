@@ -33,6 +33,25 @@ export const fetchUsers = createAsyncThunk(
   }
 );
 
+// Thunk: Lấy thông tin người dùng theo ID
+export const fetchUserById = createAsyncThunk(
+  "users/fetchUserById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(`${BaseURL}/users/${id}`, config);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to fetch user");
+    }
+  }
+);
+
 // Thunk: Tạo người dùng mới
 export const createUser = createAsyncThunk(
   "users/createUser",
@@ -93,6 +112,7 @@ export const deleteUser = createAsyncThunk(
 // Khởi tạo state ban đầu
 const initialState = {
   users: [],
+  currentUser: null,
   loading: false,
   error: null,
 };
@@ -111,6 +131,14 @@ const userMSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchUsers.rejected, handleRejected)
+
+      // Fetch user by ID
+      .addCase(fetchUserById.pending, handlePending)
+      .addCase(fetchUserById.fulfilled, (state, action) => {
+        state.currentUser = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchUserById.rejected, handleRejected)
 
       // Create user
       .addCase(createUser.pending, handlePending)

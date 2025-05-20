@@ -20,7 +20,7 @@ export const menuData = [
           displayName: "Set 2",
           items: [
             { name: "Gỏi Mực Rồng Biển", image: "/images/32.png" },
-            { name: "Tôm Quảng Châu", image: "/images/33.png" },
+            { name: "Tôm Quảng Châu", image: "/images/33.jpg" },
             { name: "Gà Tiềm Thảo Mộc", image: "/images/34.png" },
             { name: "Sườn Nướng Mật Ong Nguồn Vị - BB", image: "/images/35.png" },
             { name: "Cá Chẻm Phi Lê Hấp Tàu Xì", image: "/images/36.png" },

@@ -41,7 +41,7 @@ const BookingSuccess = () => {
               <p><span className="font-medium">Mã đơn:</span> #{currentBooking.id}</p>
               <p><span className="font-medium">Tên sự kiện:</span> {currentBooking.eventName}</p>
               <p><span className="font-medium">Ngày tổ chức:</span> {currentBooking.eventDate}</p>
-              <p><span className="font-medium">Thời gian:</span> {currentBooking.startTime} - {currentBooking.endTime}</p>
+              <p><span className="font-medium">Thời gian:</span> {currentBooking.TimeSlot.startTime} - {currentBooking.TimeSlot.endTime}</p>
               <p><span className="font-medium">Tổng chi phí:</span> {} VNĐ</p>
             </div>
           </div>

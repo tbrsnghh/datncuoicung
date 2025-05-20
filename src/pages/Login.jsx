@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getMe, login, logout } from "../redux/authSlice";
+import Swal from 'sweetalert2';
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -19,8 +20,7 @@ export default function Login() {
           console.error("Lấy thông tin user thất bại:", err);
           token && dispatch(logout());
           localStorage.removeItem("token");
-window.location.reload();
-
+          window.location.reload();
         });
     }
   }, [token, user, dispatch]);
@@ -33,24 +33,62 @@ window.location.reload();
     }
   }, [user, navigate, location.state]);
 
+  // Xử lý lỗi từ Redux state
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Đăng nhập thất bại!',
+        text: error.message || 'Email hoặc mật khẩu không đúng',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#e11d48',
+      });
+    }
+  }, [error]);
+
   const handleLogin = async () => {
     if (loading) return; // Ngăn chặn spam click khi đang loading
+
+    // Kiểm tra các trường bắt buộc
+    if (!email || !password) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Thiếu thông tin!',
+        text: 'Vui lòng điền đầy đủ email và mật khẩu',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#e11d48',
+      });
+      return;
+    }
+
     try {
       await dispatch(login({ email, password })).unwrap();
     } catch (err) {
-      console.error("Đăng nhập thất bại:", err);
+      const errorMessage = err.response?.data?.message || err.message || 'Đăng nhập thất bại';
+      Swal.fire({
+        icon: 'error',
+        title: 'Đăng nhập thất bại!',
+        text: errorMessage,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#e11d48',
+      });
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-rose-100">
+      <div className="flex items-center gap-4 absolute top-20">
+        <Link to="/" className="text-rose-500 hover:text-rose-600">
+          <h1 className="text-5xl font-bold text-rose-500 dancing-script-b">
+            Nhà hàng tiệc cưới Đông Á
+          </h1>
+        </Link>
+      </div>
+      
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <h2 className="text-2xl font-bold text-center mb-6 text-rose-500">
           Đăng nhập
         </h2>
-
-        {/* ✅ Hiển thị lỗi nếu có */}
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-rose-500">
@@ -80,7 +118,7 @@ window.location.reload();
 
         <button
           onClick={handleLogin}
-          disabled={loading} // ✅ Chặn click khi loading
+          disabled={loading}
           className={`w-full text-white font-semibold py-2 rounded-md transition duration-200 ${
             loading
               ? "bg-gray-400 cursor-not-allowed"
@@ -96,6 +134,11 @@ window.location.reload();
             {" "}
             Đăng ký
           </Link>
+          <span className="block mt-2">
+            <Link to="/forgot-password" className="text-rose-500 hover:underline">
+              Quên mật khẩu?
+            </Link>
+          </span>
         </p>
       </div>
     </div>

@@ -18,21 +18,19 @@ const Booking = () => {
     userId: user?.id,
     eventName: "",
     eventDate: "",
-    startTime: "",
-    endTime: "",
     hallId: null,
+    timeSlotId: null,
     menuId: null,
-    numberOfGuests: 0,
-    tableCount: "",
+    numberOfTables: 0,
     guestCount: ""
   });
 
   // Nếu chưa đăng nhập, chuyển hướng về login
   useEffect(() => {
-    if (!token) {
+    if (!token || localStorage.getItem("user") === null) {
       setTimeout(() => {
         navigate("/login", { state: { from: location.pathname } });
-      }, 3000);
+      }, 1500);
     }
   }, [token, navigate, location]);
 
@@ -44,34 +42,30 @@ const Booking = () => {
           setError("Vui lòng nhập tên sự kiện");
           return false;
         }
-        if (!eventInfo.eventDate) {
-          setError("Vui lòng chọn ngày tổ chức");
-          return false;
-        }
-        if (!eventInfo.startTime) {
-          setError("Vui lòng chọn giờ bắt đầu");
-          return false;
-        }
-        if (!eventInfo.endTime) {
-          setError("Vui lòng chọn giờ kết thúc");
-          return false;
-        }
-        if (!eventInfo.tableCount || parseInt(eventInfo.tableCount) < 1) {
-          setError("Số bàn phải lớn hơn 0");
-          return false;
-        }
         if (!eventInfo.guestCount || parseInt(eventInfo.guestCount) < 1) {
           setError("Số khách phải lớn hơn 0");
           return false;
         }
         break;
       case 2:
+        if (!eventInfo.eventDate) {
+          setError("Vui lòng chọn ngày tổ chức");
+          return false;
+        }
         if (eventInfo.hallId === null) {
           setError("Vui lòng chọn một hội trường");
           return false;
         }
+        if (eventInfo.timeSlotId === null) {
+          setError("Vui lòng chọn một khung giờ");
+          return false;
+        }
         break;
       case 3:
+        if (!eventInfo.tableCount || parseInt(eventInfo.tableCount) < 1) {
+          setError("Số bàn phải lớn hơn 0");
+          return false;
+        }
         if (eventInfo.menuId === null) {
           setError("Vui lòng chọn một menu");
           return false;

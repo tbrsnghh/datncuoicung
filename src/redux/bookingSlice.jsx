@@ -9,7 +9,19 @@ export const createBooking = createAsyncThunk(
   async (bookingData, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`${API_URL}/event`, bookingData, {
+      console.log(bookingData)
+      const response = await axios.post(`${API_URL}/event`, {
+        eventName: bookingData.eventName,
+        userId: bookingData.userId,
+        hallId: bookingData.hallId,
+        timeSlotId: bookingData.timeSlotId,
+        menuId: bookingData.menuId,
+        eventDate: bookingData.eventDate,
+        numberOfGuests: bookingData.numberOfGuests,
+        numberOfTables: bookingData.numberOfTables,
+        
+        notes: bookingData.notes || ''
+      }, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -55,7 +67,7 @@ export const updateEventStatus = createAsyncThunk(
   async ({ eventId, status }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.put(
+      const response = await axios.patch(
         `${API_URL}/event/${eventId}/status`,
         { status },
         {
