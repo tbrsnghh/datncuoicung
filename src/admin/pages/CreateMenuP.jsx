@@ -68,6 +68,7 @@ export default function MenuManage() {
             dishId: +dishId,
             quantity,
           })),
+          totalPrice
         })
       ).unwrap();
 

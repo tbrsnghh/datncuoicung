@@ -14,7 +14,7 @@ export default function Step4Expense({ eventInfo }) {
   
   const hallPrice = selectedHall ? selectedHall.price : 0;
   //console.log(hallPrice);
-  const menuPrice = selectedMenu ? selectedMenu.totalPrice * eventInfo.tableCount : 0;
+  const menuPrice = selectedMenu ? selectedMenu.Dishes.reduce((total, dish) => total + dish.price, 0) * eventInfo.tableCount : 0;
   //console.log(menuPrice);
   const totalPrice = hallPrice + menuPrice;
   //console.log(timeslot)

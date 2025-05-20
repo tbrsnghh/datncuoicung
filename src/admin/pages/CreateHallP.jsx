@@ -11,7 +11,7 @@ export default function CreateHallP() {
   const [formData, setFormData] = useState({
     name: "",
     capacity: "",
-    description: "",
+    description: "Mô tả trên 10 ký tự",
     price: ""
   });
   const [selectedImage, setSelectedImage] = useState(null);

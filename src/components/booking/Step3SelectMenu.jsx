@@ -25,7 +25,7 @@ export default function Step3SelectMenu({ eventInfo, setEventInfo }) {
   // Tính tổng giá dựa trên số bàn và giá menu
   const selectedMenu = menu?.find(item => item.id === eventInfo.menuId);
   const totalPrice = selectedMenu && eventInfo.tableCount 
-    ? selectedMenu.totalPrice * eventInfo.tableCount 
+    ? selectedMenu.Dishes.reduce((total, dish) => total + dish.price, 0) * eventInfo.tableCount 
     : 0;
 
   return (
@@ -69,7 +69,7 @@ export default function Step3SelectMenu({ eventInfo, setEventInfo }) {
                   <h4 className="font-medium">{item.name}</h4>
                   <p className="text-gray-600">{item.description}</p>
                   <p className="text-rose-600 font-medium mt-2">
-                    {item.totalPrice.toLocaleString()} VNĐ
+                    {item.Dishes ? item.Dishes.reduce((total, dish) => total + dish.price, 0).toLocaleString() : 0} đ
                   </p>
                 </div>
               ))}
@@ -85,7 +85,7 @@ export default function Step3SelectMenu({ eventInfo, setEventInfo }) {
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span>Giá menu:</span>
-                <span>{selectedMenu.totalPrice.toLocaleString()} VNĐ</span>
+                <span>{selectedMenu.Dishes.reduce((total, dish) => total + dish.price, 0).toLocaleString())} VNĐ</span>
               </div>
               <div className="flex justify-between">
                 <span>Số bàn:</span>

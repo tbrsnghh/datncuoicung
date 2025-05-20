@@ -18,7 +18,7 @@ export default function DishAddModal({ onClose }) {
       Swal.fire("Thành công!", "Món ăn đã được thêm thành công.", "success");
       onClose();
     } catch (error) {
-      Swal.fire("Lỗi!", error.message || "Có lỗi xảy ra.", "error");
+      Swal.fire("Lỗi!", error || "Có lỗi xảy ra.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -60,7 +60,7 @@ export default function DishAddModal({ onClose }) {
             <span className="text-sm text-gray-600">Mô tả</span>
             <textarea
               className="w-full p-2 border rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Mô tả"
+              placeholder="Mô tả (trên 10 ký tự)"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
